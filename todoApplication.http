@@ -29,3 +29,5 @@ GET http://localhost:3000/todos/?category=LEARNING&priority=HIGH
 GET http://localhost:3000/todos/1/
 
 ###
+
+GET http://localhost:3000/agenda/?date=2021-04-04

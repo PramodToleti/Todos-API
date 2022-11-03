@@ -186,3 +186,18 @@ app.get("/todos/:todoId/", async (request, response) => {
   });
   response.send(...todoDetails);
 });
+
+//Get Agenda Based on Date APi
+app.get("/agenda/", async (request, response) => {
+  const { date } = request.query;
+  const getTodoQuery = `
+    SELECT 
+      *
+    FROM
+     todo
+    WHERE 
+      todo.due_date = '${date}';
+  `;
+  const dbResponse = await db.get(getTodoQuery);
+  response.send(dbResponse);
+});

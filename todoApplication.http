@@ -47,3 +47,12 @@ Content-Type: application/json
 }
 
 ###
+
+PUT http://localhost:3000/todos/6/
+Content-Type: application/json
+
+{
+  "status": "DONE"
+}
+
+###

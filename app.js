@@ -206,7 +206,6 @@ app.get("/agenda/", async (request, response) => {
 app.post("/todos/", async (request, response) => {
   const requestBody = request.body;
   const { id, todo, priority, status, category, dueDate } = requestBody;
-  console.log(id, todo, status, dueDate);
   const addTodoQuery = `
         INSERT INTO 
           todo(id, todo, priority, status, category, due_date)
@@ -221,4 +220,59 @@ app.post("/todos/", async (request, response) => {
     `;
   const dbResponse = await db.run(addTodoQuery);
   response.send("Todo Successfully Added");
+});
+
+//Update Todo based on Request API
+app.put("/todos/:todoId/", async (request, response) => {
+  const requestBody = request.body;
+  const { todoId } = request.params;
+  let updatedColumn = "";
+  switch (true) {
+    case requestBody.status !== undefined:
+      updatedColumn = "Status";
+      break;
+    case requestBody.priority !== undefined:
+      updatedColumn = "Priority";
+      break;
+    case requestBody.todo !== undefined:
+      updatedColumn = "Todo";
+      break;
+    case requestBody.category !== undefined:
+      updatedColumn = "Category";
+      break;
+    default:
+      updatedColumn = "Due Date";
+      break;
+  }
+  const originalTodoQuery = `
+    SELECT 
+      *
+    FROM
+      todo
+    WHERE 
+      todo.id = ${todoId};
+  `;
+  const originalTodoDetails = await db.get(originalTodoQuery);
+  const {
+    status = originalTodoDetails.status,
+    priority = originalTodoDetails.priority,
+    todo = originalTodoDetails.todo,
+    category = originalTodoDetails.category,
+    dueDate = originalTodoDetails.due_date,
+  } = requestBody;
+
+  const updateTodoQuery = `
+    UPDATE 
+      todo
+    SET 
+      todo = '${todo}',
+      priority = '${priority}',
+      status = '${status}',
+      category = '${category}',
+      due_date = '${dueDate}'
+    WHERE 
+      id = ${todoId};
+  `;
+  const dbResponse = await db.run(updateTodoQuery);
+  response.send(`${updatedColumn} Updated`);
 });

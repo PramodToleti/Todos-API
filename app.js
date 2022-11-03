@@ -161,3 +161,28 @@ app.get("/todos/", async (request, response) => {
   });
   response.send(todoDetails);
 });
+
+//Get Todo Based on ID API
+app.get("/todos/:todoId/", async (request, response) => {
+  const { todoId } = request.params;
+  const getTodQuery = `
+        SELECT 
+          * 
+        FROM
+          todo
+        WHERE 
+          todo.id = ${todoId};
+    `;
+  const dbResponse = await db.get(getTodQuery);
+  const todoDetails = [dbResponse].map((obj) => {
+    return {
+      id: obj.id,
+      todo: obj.todo,
+      priority: obj.priority,
+      status: obj.status,
+      category: obj.category,
+      dueDate: obj.due_date,
+    };
+  });
+  response.send(...todoDetails);
+});

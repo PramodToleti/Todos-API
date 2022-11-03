@@ -201,3 +201,24 @@ app.get("/agenda/", async (request, response) => {
   const dbResponse = await db.get(getTodoQuery);
   response.send(dbResponse);
 });
+
+//Create Todo API
+app.post("/todos/", async (request, response) => {
+  const requestBody = request.body;
+  const { id, todo, priority, status, category, dueDate } = requestBody;
+  console.log(id, todo, status, dueDate);
+  const addTodoQuery = `
+        INSERT INTO 
+          todo(id, todo, priority, status, category, due_date)
+        VALUES (
+            ${id},
+            '${todo}',
+            '${priority}',
+            '${status}',
+            '${category}',
+            '${dueDate}'
+        );
+    `;
+  const dbResponse = await db.run(addTodoQuery);
+  response.send("Todo Successfully Added");
+});

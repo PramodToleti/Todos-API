@@ -1,8 +1,9 @@
 const express = require("express");
 const path = require("path");
-const addDays = require("date-fns/addDays");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
+const isValid = require("date-fns/isValid");
+const format = require("date-fns/format");
 
 const app = express();
 app.use(express.json());
@@ -62,7 +63,6 @@ const hasCategoryAndPriority = (requestQuery) => {
     requestQuery.category !== undefined && requestQuery.priority !== undefined
   );
 };
-
 
 const validStatus = ["TO DO", "IN PROGRESS", "DONE"];
 const validPriority = ["HIGH", "MEDIUM", "LOW"];
@@ -186,6 +186,7 @@ const isValidUpdate = async (request, response, next) => {
 
 const isValidAgenda = (request, response, next) => {
   const { date } = request.query;
+  let isValidDate = false;
   let [year, month, day] = date.split("-");
   year = parseInt(year);
   month = parseInt(month) - 1;
@@ -363,8 +364,7 @@ app.get("/agenda/", isValidAgenda, async (request, response) => {
 });
 
 //Create Todo API
-app.post("/todos/", async (request, response) => {
-  console.log(request.body);
+app.post("/todos/", isValidAdd, async (request, response) => {
   const { id, todo, priority, category, status, dueDate } = request.body;
   const addTodoQuery = `
   INSERT INTO
@@ -406,6 +406,7 @@ app.put("/todos/:todoId/", isValidUpdate, async (request, response) => {
       id = ${todoId};
   `;
   const originalTodoDetails = await db.get(originalTodoQuery);
+  console.log(originalTodoDetails);
   const {
     status = originalTodoDetails.status,
     priority = originalTodoDetails.priority,
@@ -444,4 +445,3 @@ app.delete("/todos/:todoId", async (request, response) => {
 });
 
 module.exports = app;
-

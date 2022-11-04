@@ -26,11 +26,11 @@ GET http://localhost:3000/todos/?category=LEARNING&priority=HIGH
 
 ###
 
-GET http://localhost:3000/todos/1/
+GET http://localhost:3000/todos/7/
 
 ###
 
-GET http://localhost:3000/agenda/?date=2021-04-04
+GET http://localhost:3000/agenda/?date=2022-09-22
 
 ###
 
@@ -38,12 +38,12 @@ POST http://localhost:3000/todos/
 Content-Type: application/json
 
 {
-  "id": 6,
-  "todo": "Finalize event theme",
-  "priority": "LOW",
+  "id": 7,
+  "todo": "Learn Algebra",
+  "priority": "MEDIUM",
   "status": "TO DO",
-  "category": "HOME",
-  "dueDate": "2021-02-22"
+  "category": "LEARNING",
+  "dueDate": "2022-22"
 }
 
 ###
@@ -52,7 +52,11 @@ PUT http://localhost:3000/todos/6/
 Content-Type: application/json
 
 {
-  "status": "DONE"
+  "priority": "LOW"
 }
+
+###
+
+DELETE http://localhost:3000/todos/7/ 
 
 ###
